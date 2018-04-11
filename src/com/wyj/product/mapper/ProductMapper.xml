@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyj.product.mapper.ProductMapper">
+    <!--Producy手动结果集-->
+    <resultMap id="ProductResult" type="com.wyj.product.pojo.Product">
+        <id property="id" column="id"/>
+        <result property="productname" column="productname"/>
+        <result property="descs" column="Descs"/>
+        <result property="cid" column="cid"/>
+        <association property="catagory" resultMap="CatagoryResult" javaType="com.wyj.product.pojo.Catagory"/>
+    </resultMap>
+    <!--Catagory手动结果集-->
+    <resultMap id="CatagoryResult" type="com.wyj.product.pojo.Catagory">
+        <id property="id" column="id"/>
+        <result property="name" column="Name"/>
+        <result property="explain" column="Explain"/>
+    </resultMap>
+    <!--新增产品-->
+    <insert id="addproduct" parameterType="com.wyj.product.pojo.Product">
+        insert into ssm.product(productname, Descs, cid) values (#{productname},#{descs},#{cid});
+    </insert>
+
+    <!--删除产品-->
+    <delete id="delproduct">
+        DELETE  FROM ssm.product where id=#{id}
+    </delete>
+
+    <!--查询并分页-->
+    <select id="productPage" resultType="com.wyj.product.pojo.Product" resultMap="ProductResult">
+      select * from ssm.product p
+      INNER  join ssm.catagory c on(p.cid=c.id)
+    LIMIT #{pageNo},#{pageSize}
+    </select>
+    <!--查询数据总条数-->
+    <select id="productCount" resultType="java.lang.Integer">
+        select count(*)from ssm.product;
+    </select>
+</mapper>
